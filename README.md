@@ -45,5 +45,3 @@ To boost model accuracy, we engineered behavioral features:
     python scripts/preprocess.py
     ```
 
----
-**Current Status**: Phase 1 is 100% complete. The project is now ready for **Phase 2: The Forecasting Engine**.
