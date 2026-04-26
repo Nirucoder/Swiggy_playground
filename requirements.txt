@@ -2,3 +2,6 @@ pandas
 numpy
 textblob
 requests
+prophet
+plotly
+scikit-learn
