@@ -22,6 +22,8 @@ swiggy/
 We unified three distinct "worlds" into one timeline:
 1.  **Sales History**: Converted weekly "Food Demand" snapshots into daily continuous flows using linear interpolation.
 2.  **Weather Intelligence**: Integrated **1,000+ days** of real Bangalore weather (Temperature & Rain) using the WeatherAPI.com Business Trial.
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/4ab8b263-73f1-4785-9630-652a19e3f65e" />
+
 3.  **Customer Sentiment**: Processed **8,000 restaurant reviews** using the **TextBlob NLP engine** to calculate daily mood scores.
 
 ## 🧠 Intelligent Features
