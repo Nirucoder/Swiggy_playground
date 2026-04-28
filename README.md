@@ -43,10 +43,27 @@ Accuracy was verified using **Rolling Window Cross-Validation** (testing across 
 
 ---
 
-## 📂 Project Assets
-- `models/*.pkl`: 17 optimized "Brains" containing the custom-tuned parameters.
-- `scripts/optimize_models.py`: The automated search-and-train engine.
-- `notebooks/model_prophet.ipynb`: Experimental history and documentation.
+## 📂 Project Structure
+
+```text
+swiggy/
+├── src/                    # Application source code
+│   ├── components/         # Streamlit UI components
+│   ├── config/             # Configuration and settings (API keys, paths)
+│   ├── utils/              # Utility functions (Data loading, Weather, Styling)
+├── scripts/                # Backend scripts
+│   ├── pipeline/           # Data preprocessing and model training
+│   └── scraper/            # Swiggy live scraper
+├── data/                   # Data storage
+│   ├── raw/                # Unprocessed data
+│   ├── processed/          # Cleaned and engineered data
+│   └── live/               # Real-time scraped data
+├── models/                 # Saved model artifacts (.pkl)
+├── notebooks/              # Research and EDA
+├── dashboard.py            # Main entry point (Streamlit App)
+├── requirements.txt        # Project dependencies
+└── README.md               # Project documentation
+```
 
 ## 🛠️ Environment Requirements
 ```text
