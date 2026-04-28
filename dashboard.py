@@ -20,7 +20,7 @@ df_summary = load_forecast_summary()
 weather = get_live_weather()
 
 # Sidebar: Live Scraper
-st.sidebar.image("https://upload.wikimedia.org/wikipedia/en/thumb/1/12/Swiggy_logo.svg/1200px-Swiggy_logo.svg.png", width=150)
+# Swiggy logo removed due to broken link
 st.sidebar.title("Live Scraper Feed")
 
 if st.sidebar.button("🔍 Run Live Swiggy Scraper"):
