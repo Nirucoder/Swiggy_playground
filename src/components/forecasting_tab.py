@@ -15,11 +15,19 @@ def render_forecasting_tab(df_history, df_hourly, df_summary, weather):
     for p in ['Indian ', 'Italian ', 'Thai ', 'Continental ']:
         winner_display = winner_display.replace(p, '')
 
-    c1, c2, c3, c4 = st.columns(4)
+    c1, c2, c3, c4, c5, c6 = st.columns(6)
+    
+    monthly_orders = df_summary.iloc[0]['predicted_30day_orders']
+    weekly_forecast = monthly_orders // 4
+    hourly_champ = df_hourly[df_hourly['category'] == winner_raw].groupby('hour')['y'].mean().reset_index()
+    champ_peak_hour = int(hourly_champ.loc[hourly_champ['y'].idxmax(), 'hour'])
+
     with c1: st.metric("Top Product", winner_display)
-    with c2: st.metric("Monthly Forecast", f"{df_summary.iloc[0]['predicted_30day_orders']:,}")
-    with c3: st.metric("Live Temp", f"{weather['temp']}°C")
-    with c4: st.metric("Live Rain", f"{weather['rain']}mm")
+    with c2: st.metric("Monthly Forecast", f"{monthly_orders:,}")
+    with c3: st.metric("Weekly Forecast", f"{weekly_forecast:,}")
+    with c4: st.metric("Peak Hour", f"{champ_peak_hour}:00")
+    with c5: st.metric("Live Temp", f"{weather['temp']}°C")
+    with c6: st.metric("Live Rain", f"{weather['rain']}mm")
 
     st.divider()
 
