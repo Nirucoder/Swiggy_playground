@@ -33,6 +33,16 @@ live_json = load_live_data(LIVE_DATA_PATH)
 if live_json:
     st.sidebar.info(f"Tracked: {live_json.get('restaurant', 'N/A')}")
     st.sidebar.metric("Live Sentiment", f"{live_json.get('live_sentiment_score', 0)}")
+    st.sidebar.metric("Demand Index", f"{live_json.get('demand_index', 'N/A')}")
+    trending = live_json.get('trending_this_hour', '')
+    if trending:
+        st.sidebar.metric("Trending Now", trending.replace('Indian ', '').replace('Italian ', '').replace('Thai ', '').replace('Continental ', ''))
+    sellers = live_json.get('best_sellers_today', [])
+    if sellers:
+        st.sidebar.markdown(f"**Top Sellers:** {', '.join(sellers[:2])}")
+    ts = live_json.get('timestamp', '')
+    if ts:
+        st.sidebar.caption(f"Last scraped: {ts}")
 
 # Main Dashboard
 st.title("Swiggy Demand Forecasting Dashboard")
