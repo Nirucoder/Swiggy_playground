@@ -23,7 +23,7 @@ weather = get_live_weather()
 # Swiggy logo removed due to broken link
 st.sidebar.title("Live Scraper Feed")
 
-if st.sidebar.button("🔍 Run Live Swiggy Scraper"):
+if st.sidebar.button("Run Live Swiggy Scraper"):
     with st.sidebar.status("Scraping Swiggy Live...", expanded=True):
         # Note: Ensure the script path is correct relative to the execution root
         os.system(f"python {SCRAPER_SCRIPT}")
@@ -31,14 +31,14 @@ if st.sidebar.button("🔍 Run Live Swiggy Scraper"):
 
 live_json = load_live_data(LIVE_DATA_PATH)
 if live_json:
-    st.sidebar.info(f"📍 Tracked: {live_json.get('restaurant', 'N/A')}")
-    st.sidebar.metric("Live Sentiment", f"{live_json.get('live_sentiment_score', 0)} 🎭")
+    st.sidebar.info(f"Tracked: {live_json.get('restaurant', 'N/A')}")
+    st.sidebar.metric("Live Sentiment", f"{live_json.get('live_sentiment_score', 0)}")
 
 # Main Dashboard
-st.title("🍔 Swiggy Demand Forecasting Dashboard")
+st.title("Swiggy Demand Forecasting Dashboard")
 
 # Navigation Tabs
-tab1, tab2 = st.tabs(["📈 Forecasting", "🧠 Customer Behavior & Trends"])
+tab1, tab2 = st.tabs(["Forecasting", "Customer Behavior & Trends"])
 
 with tab1:
     selected_cat, selected_display = render_forecasting_tab(df_history, df_hourly, df_summary, weather)
