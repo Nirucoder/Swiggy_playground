@@ -4,35 +4,46 @@ import plotly.graph_objects as go
 import plotly.express as px
 import pickle
 import os
+import datetime
 from datetime import timedelta
 from src.config.settings import MODELS_DIR
 
 def render_forecasting_tab(df_history, df_hourly, df_summary, weather):
     # --- Row 1: The Best Seller Focus ---
-    st.subheader("🏆 Next Month's Champion")
+    st.subheader("Next Month's Champion")
+    
     winner_raw = df_summary.iloc[0]['category']
     winner_display = winner_raw
     for p in ['Indian ', 'Italian ', 'Thai ', 'Continental ']:
         winner_display = winner_display.replace(p, '')
 
-    c1, c2, c3, c4, c5, c6 = st.columns(6)
-    
     monthly_orders = df_summary.iloc[0]['predicted_30day_orders']
-    weekly_forecast = monthly_orders // 4
-    hourly_champ = df_hourly[df_hourly['category'] == winner_raw].groupby('hour')['y'].mean().reset_index()
-    champ_peak_hour = int(hourly_champ.loc[hourly_champ['y'].idxmax(), 'hour'])
+    
+    # Calculate Hourly Top Product based on current hour
+    current_hour = datetime.datetime.now().hour
+    hourly_top_raw = df_hourly[df_hourly['hour'] == current_hour].groupby('category')['y'].mean().idxmax()
+    hourly_top_display = hourly_top_raw
+    for p in ['Indian ', 'Italian ', 'Thai ', 'Continental ']:
+        hourly_top_display = hourly_top_display.replace(p, '')
+        
+    weekly_top_display = winner_display # Generally the same as monthly
 
-    with c1: st.metric("Top Product", winner_display)
-    with c2: st.metric("Monthly Forecast", f"{monthly_orders:,}")
-    with c3: st.metric("Weekly Forecast", f"{weekly_forecast:,}")
-    with c4: st.metric("Peak Hour", f"{champ_peak_hour}:00")
+    # Row 1 of metrics
+    c1, c2, c3 = st.columns(3)
+    with c1: st.metric("Top Product (Monthly)", winner_display)
+    with c2: st.metric("Top Product (Weekly)", weekly_top_display)
+    with c3: st.metric("Top Product (Hourly)", hourly_top_display)
+
+    # Row 2 of metrics
+    c4, c5, c6 = st.columns(3)
+    with c4: st.metric("Monthly Forecast", f"{monthly_orders:,}")
     with c5: st.metric("Live Temp", f"{weather['temp']}°C")
     with c6: st.metric("Live Rain", f"{weather['rain']}mm")
 
     st.divider()
 
     # --- Simulation Lab ---
-    st.subheader("🧪 'What-If' Simulation Laboratory")
+    st.subheader("'What-If' Simulation Laboratory")
     sc1, sc2, sc3, sc4 = st.columns(4)
     with sc1: in_temp = st.slider("Temperature (C)", 15, 45, int(weather['temp']))
     with sc2: in_rain = st.slider("Rainfall (mm)", 0, 100, int(weather['rain']))
@@ -78,7 +89,7 @@ def render_forecasting_tab(df_history, df_hourly, df_summary, weather):
             st.warning(f"Model for {selected_cat} not found at {model_path}")
 
     with col_right:
-        st.subheader("⏰ Hourly Peaks")
+        st.subheader("Hourly Peaks")
         hourly_pattern = df_hourly[df_hourly['category'] == selected_cat].groupby('hour')['y'].mean().reset_index()
         hourly_pattern['percentage'] = (hourly_pattern['y'] / hourly_pattern['y'].sum()) * 100
         fig_hourly = px.bar(hourly_pattern, x='hour', y='percentage', color_discrete_sequence=['#fc8019'])
