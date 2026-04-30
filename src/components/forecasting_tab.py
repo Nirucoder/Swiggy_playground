@@ -19,20 +19,35 @@ def render_forecasting_tab(df_history, df_hourly, df_summary, weather):
 
     monthly_orders = df_summary.iloc[0]['predicted_30day_orders']
     
-    # Calculate Hourly Top Product based on current hour
+    # Calculate Trending Hourly Product (highest relative spike for current hour)
     current_hour = datetime.datetime.now().hour
-    hourly_top_raw = df_hourly[df_hourly['hour'] == current_hour].groupby('category')['y'].mean().idxmax()
+    cat_daily_avg = df_hourly.groupby('category')['y'].mean()
+    hr_avg = df_hourly[df_hourly['hour'] == current_hour].groupby('category')['y'].mean()
+    hourly_top_raw = (hr_avg / cat_daily_avg).idxmax()
+    
     hourly_top_display = hourly_top_raw
     for p in ['Indian ', 'Italian ', 'Thai ', 'Continental ']:
         hourly_top_display = hourly_top_display.replace(p, '')
         
-    weekly_top_display = winner_display # Generally the same as monthly
+    # Calculate Trending Today Product (highest relative spike for current day of week)
+    current_day = datetime.datetime.now().strftime('%A')
+    cat_overall_avg = df_history.groupby('category')['y'].mean()
+    day_avg = df_history[df_history['day_of_week'] == current_day].groupby('category')['y'].mean()
+    
+    if not day_avg.empty:
+        weekly_top_raw = (day_avg / cat_overall_avg).idxmax()
+    else:
+        weekly_top_raw = winner_raw
+
+    weekly_top_display = weekly_top_raw
+    for p in ['Indian ', 'Italian ', 'Thai ', 'Continental ']:
+        weekly_top_display = weekly_top_display.replace(p, '')
 
     # Row 1 of metrics
     c1, c2, c3 = st.columns(3)
-    with c1: st.metric("Top Product (Monthly)", winner_display)
-    with c2: st.metric("Top Product (Weekly)", weekly_top_display)
-    with c3: st.metric("Top Product (Hourly)", hourly_top_display)
+    with c1: st.metric("Top Product (Overall)", winner_display)
+    with c2: st.metric("Trending Today", weekly_top_display)
+    with c3: st.metric("Trending This Hour", hourly_top_display)
 
     # Row 2 of metrics
     c4, c5, c6 = st.columns(3)
